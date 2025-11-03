@@ -1,42 +1,50 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+@layer utilities {
+  /* Fondo principal (original: bg-gray-100) -> Azul claro para un fondo inspirado en el cielo de Radiator Springs */
+  .bg-gray-100 {
+    @apply bg-mc-light-blue;
   }
-  to {
-    transform: rotate(360deg);
+
+  /* Borders generales (original: border-gray-300) -> Gris púrpura para un toque metálico */
+  .border-gray-300 {
+    @apply border-mc-gray;
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  /* Border del logo (original: border-gray-400) -> Negro oscuro para contraste */
+  .border-gray-400 {
+    @apply border-mc-dark;
   }
-}
 
-.card {
-  padding: 2em;
-}
+  /* Texto placeholder del logo (original: text-gray-500) -> Negro oscuro (aunque ahora usas img, por si queda) */
+  .text-gray-500 {
+    @apply text-mc-dark;
+  }
 
-.read-the-docs {
-  color: #888;
+  /* Focus ring de inputs (original: focus:ring-gray-400) -> Naranja para energía */
+  .focus\:ring-gray-400 {
+    @apply focus:ring-mc-orange;
+  }
+
+  /* Botón background (original: bg-gray-800) -> Rojo principal para "velocidad" */
+  .bg-gray-800 {
+    @apply bg-mc-red;
+  }
+
+  /* Hover del botón (original: hover:bg-gray-700) -> Rojo ligeramente oscurecido */
+  .hover\:bg-gray-700 {
+    @apply hover:bg-mc-red/90;
+  }
+
+  /* Texto inferior (original: text-gray-600) -> Gris púrpura */
+  .text-gray-600 {
+    @apply text-mc-gray;
+  }
+
+  /* Link de registro (original: text-red-500) -> Naranja para consistencia con rayos */
+  .text-red-500 {
+    @apply text-mc-orange;
+  }
 }

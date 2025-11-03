@@ -1,68 +1,50 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@layer components { 
+  /* Fondo principal (original: bg-gray-100) -> Azul claro para un fondo inspirado en el cielo de Radiator Springs */
+  .bg-gray-100 {
+    @apply bg-mc-light-blue;
   }
-  a:hover {
-    color: #747bff;
+
+  /* Borders generales (original: border-gray-300) -> Gris púrpura para un toque metálico */
+  .border-gray-300 {
+    @apply border-mc-gray;
   }
-  button {
-    background-color: #f9f9f9;
+
+  /* Border del logo (original: border-gray-400) -> Negro oscuro para contraste */
+  .border-gray-400 {
+    @apply border-mc-dark;
+  }
+
+  /* Texto placeholder del logo (original: text-gray-500) -> Negro oscuro (aunque ahora usas img, por si queda) */
+  .text-gray-500 {
+    @apply text-mc-dark;
+  }
+
+  /* Focus ring de inputs (original: focus:ring-gray-400) -> Naranja para energía */
+  .focus\:ring-gray-400 {
+    @apply focus:ring-mc-orange;
+  }
+
+  /* Botón background (original: bg-gray-800) -> Rojo principal para "velocidad" */
+  .bg-gray-800 {
+    @apply bg-mc-red;
+  }
+
+  /* Hover del botón (original: hover:bg-gray-700) -> Rojo ligeramente oscurecido */
+  .hover\:bg-gray-700 {
+    @apply hover:bg-mc-red/90;
+  }
+
+  /* Texto inferior (original: text-gray-600) -> Gris púrpura */
+  .text-gray-600 {
+    @apply text-mc-gray;
+  }
+
+  /* Link de registro (original: text-red-500) -> Naranja para consistencia con rayos */
+  .text-red-500 {
+    @apply text-mc-orange;
   }
 }
