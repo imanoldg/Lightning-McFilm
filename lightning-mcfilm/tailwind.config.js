@@ -13,6 +13,9 @@ export default {
         'mc-gray': '#756a7a',      // Gris púrpura (para borders y textos secundarios)
         'mc-dark': '#2b2622',      // Negro oscuro (para acentos y textos principales)
       },
+      fontFamily:{
+        momo: ['Momo Trust Display']
+      }
     },
   },
   plugins: [],

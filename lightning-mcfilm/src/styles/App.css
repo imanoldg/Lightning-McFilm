@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Momo+Trust+Display&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -33,11 +35,6 @@
     @apply bg-mc-red;
   }
 
-  /* Hover del botón (original: hover:bg-gray-700) -> Rojo ligeramente oscurecido */
-  .hover\:bg-gray-700 {
-    @apply hover:bg-mc-red/90;
-  }
-
   /* Texto inferior (original: text-gray-600) -> Gris púrpura */
   .text-gray-600 {
     @apply text-mc-gray;
@@ -46,5 +43,11 @@
   /* Link de registro (original: text-red-500) -> Naranja para consistencia con rayos */
   .text-red-500 {
     @apply text-mc-orange;
+  }
+}
+
+@layer base{
+  html{
+    font-family: 'Momo Trust Display';
   }
 }
