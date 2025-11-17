@@ -1,10 +1,139 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/Header.jsx';
+import Footer from '../components/Footer.jsx';
 
 const Home = () => {
-    return(
-        <Header />
-    )
-}
+  const [recentMovies, setRecentMovies] = useState([]);     // Recién añadidas
+  const [allMovies, setAllMovies] = useState([]);           // TODAS las películas del catálogo
+  const [loadingRecent, setLoadingRecent] = useState(true);
+  const [loadingAll, setLoadingAll] = useState(true);
+
+  // Cargar películas recién añadidas
+  const loadRecentMovies = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/movies/recent');
+      const data = await res.json();
+      setRecentMovies(data.movies || []);
+    } catch (err) {
+      console.error('Error cargando recientes:', err);
+    } finally {
+      setLoadingRecent(false);
+    }
+  };
+
+  // Cargar TODAS las películas del caché (MongoDB)
+  const loadAllMovies = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/movies/all');
+      const data = await res.json();
+      setAllMovies(data.movies || []);
+    } catch (err) {
+      console.error('Error cargando todas las películas:', err);
+    } finally {
+      setLoadingAll(false);
+    }
+  };
+
+  useEffect(() => {
+    loadRecentMovies();
+    loadAllMovies();
+  }, []);
+
+  // Películas populares fijas (siempre rápidas y bonitas)
+  const popularMovies = [
+    { Title: "Cars", Year: "2006", imdbID: "tt0317219", Poster: "https://m.media-amazon.com/images/M/MV5BMTY2NzYxNTRjM15BMl5BanBnXkFtZTcwMjI0MTA0MQ@@._V1_.jpg" },
+    { Title: "Cars 2", Year: "2011", imdbID: "tt1216475", Poster: "https://m.media-amazon.com/images/M/MV5BMTQzODAyNTM0MF5BMl5BanBnXkFtZTcwODA3NDg1NA@@._V1_.jpg" },
+    { Title: "Cars 3", Year: "2017", imdbID: "tt3606752", Poster: "https://m.media-amazon.com/images/M/MV5BMTc0NDM5Nzk3M15BMl5BanBnXkFtZTgwNTk0MzY4MjI@._V1_.jpg" },
+    { Title: "Toy Story 4", Year: "2019", imdbID: "tt1979376", Poster: "https://m.media-amazon.com/images/M/MV5BMTYzMDM4NzkxOV5BMl5BanBnXkFtZTgwNzM1Mzg2NzM@._V1_.jpg" },
+    { Title: "Soul", Year: "2020", imdbID: "tt2948372", Poster: "https://m.media-amazon.com/images/M/MV5BZGE1MDg5M2MtNTkyZS00MTQ5LTg4N2ItZTcyNWQ2Y2Q1NmRhXkEyXkFqcGdeQXVyNjI3MjcwMDM@._V1_.jpg" },
+    { Title: "Inside Out 2", Year: "2024", imdbID: "tt22022452", Poster: "https://m.media-amazon.com/images/M/MV5BYTc3MDc0MjAtMmM1NC00ZGM5LWIxOWEtYjYxZjY2ODI4N2RkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg" },
+  ];
+
+  return (
+    <div className="min-h-screen bg-mc-light-blue">
+      <Header />
+
+      <main className="container mx-auto px-4 py-12">
+
+        {/* Título principal */}
+        <h1 className="text-6xl font-bold text-center text-mc-red mb-16 drop-shadow-2xl">
+          Lightning McFilm
+        </h1>
+
+        {/* Películas populares */}
+        <section className="mb-20">
+          <h2 className="text-4xl font-bold text-center text-mc-orange mb-10 drop-shadow-lg">
+            Películas populares del momento
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+            {popularMovies.map((movie) => (
+              <div key={movie.imdbID} className="group cursor-pointer transform hover:scale-105 transition duration-300">
+                <div className="bg-white rounded-xl shadow-2xl overflow-hidden border-4 border-mc-orange">
+                  <img src={movie.Poster} alt={movie.Title} className="w-full h-80 object-cover" />
+                  <div className="p-3 bg-mc-red text-white text-center font-bold text-sm">
+                    {movie.Title} ({movie.Year})
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Recién añadidas */}
+        <section className="mb-20">
+          <h2 className="text-4xl font-bold text-center text-mc-red mb-10 drop-shadow-lg">
+            Recién añadidas al catálogo
+          </h2>
+          {loadingRecent ? (
+            <p className="text-center text-2xl text-mc-dark">Cargando novedades...</p>
+          ) : recentMovies.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+              {recentMovies.map((movie) => (
+                <div key={movie.imdbID} className="group cursor-pointer transform hover:scale-105 transition">
+                  <div className="bg-white rounded-xl shadow-2xl overflow-hidden border-4 border-mc-red">
+                    <img src={movie.Poster || 'https://via.placeholder.com/300x450?text=No+Poster'} alt={movie.Title} className="w-full h-80 object-cover" />
+                    <div className="p-3 bg-mc-dark text-white text-center font-bold text-sm">
+                      {movie.Title} ({movie.Year})
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-xl text-mc-gray">Aún no hay películas nuevas</p>
+          )}
+        </section>
+
+        {/* TODAS LAS PELÍCULAS */}
+        <section>
+          <h2 className="text-4xl font-bold text-center text-mc-orange mb-10 drop-shadow-lg">
+            Todas las películas del catálogo
+          </h2>
+          {loadingAll ? (
+            <p className="text-center text-2xl text-mc-dark">Cargando todo el catálogo...</p>
+          ) : allMovies.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+              {allMovies.map((movie) => (
+                <div key={movie.imdbID} className="group cursor-pointer transform hover:scale-105 transition">
+                  <div className="bg-white rounded-xl shadow-2xl overflow-hidden border-4 border-mc-gray">
+                    <img src={movie.Poster || 'https://via.placeholder.com/300x450?text=No+Poster'} alt={movie.Title} className="w-full h-80 object-cover" />
+                    <div className="p-3 bg-mc-red text-white text-center font-bold text-sm">
+                      {movie.Title} ({movie.Year})
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-xl text-mc-gray">El catálogo está vacío por ahora</p>
+          )}
+        </section>
+
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
 
 export default Home;
