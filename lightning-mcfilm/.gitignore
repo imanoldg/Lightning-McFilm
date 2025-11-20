@@ -7,12 +7,13 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Node modules y builds
 node_modules
 dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# Archivos de editores e IDEs
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -23,6 +24,17 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment files
+# ====================
+# ARCHIVOS SENSIBLES (NUNCA subir al repositorio)
+# ====================
+
+# Variables de entorno (en cualquier ubicación del proyecto)
+.env
+*.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Específicamente el del backend
 backend/.env
-```// filepath:*.env
