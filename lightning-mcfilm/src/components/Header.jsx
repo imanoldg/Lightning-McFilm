@@ -1,23 +1,27 @@
-import React from 'react';
-import "../styles/App.css";
-import logoHeader from "../assets/img/logo-header.png";
+import { Link, useLocation } from 'react-router-dom';
+import logoHeader from '../assets/img/logo-header.png';
 
 const Header = () => {
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path ? 'text-mc-orange font-bold' : 'text-white hover:text-mc-orange';
+
   return (
-    <header className="bg-mc-red text-white flex items-center justify-between h-16 px-6 py-3 shadow-md">
-      {/* Logo como imagen */}
-      <img src={logoHeader} alt="Lightning McFilm" className=" w-22 h-20" /> {/* Ajusta 'h-8' para el tamaño deseado */}
+    <header className="bg-mc-red py-4 shadow-xl h-25">
+      <div className="container mx-auto px-6 flex justify-between items-center">
+        <Link to="/home" className="text-3xl font-bold text-mc-red drop-shadow-lg">
+          <img src={logoHeader} alt="Lightning McFilm Logo" className='w-22 h-20' />
+        </Link>
 
-      {/* Navigation Links */}
-      <nav className="flex space-x-8">
-        <a href="#" className="hover:text-mc-orange transition-colors">Inicio</a>
-        <a href="#" className="hover:text-mc-orange transition-colors">Buscar</a>
-        <a href="#" className="hover:text-mc-orange transition-colors">Mis Listas</a>
-      </nav>
+        <nav className="flex gap-10 items-center">
+          <Link to="/home" className={`${isActive('/home')} text-xl transition`}>Inicio</Link>
+          <Link to="/search" className={`${isActive('/search')} text-xl transition`}>Buscar</Link>
+          <Link to="/my-lists" className={`${isActive('/my-lists')} text-xl transition`}>Mis Listas</Link>
+        </nav>
 
-      {/* Profile Icon */}
-      <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-        <div className="w-5 h-5 bg-mc-dark rounded-full"></div> {/* Simple silhouette placeholder */}
+        <div className="w-12 h-12 bg-mc-orange rounded-full flex items-center justify-center text-mc-dark font-bold text-xl">
+          U
+        </div>
       </div>
     </header>
   );

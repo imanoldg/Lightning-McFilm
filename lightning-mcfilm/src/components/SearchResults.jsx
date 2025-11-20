@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const SearchResults = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // Filtros (simulados por ahora, se pueden conectar después)
   const [genreFilter, setGenreFilter] = useState('Todos');
   const [yearFilter, setYearFilter] = useState('Todos');
   const [ratingFilter, setRatingFilter] = useState('Todos');
@@ -18,79 +21,125 @@ const SearchResults = () => {
       const data = await res.json();
       setResults(data.movies || []);
     } catch (err) {
-      console.error(err);
+      console.error('Error en búsqueda:', err);
+      setResults([]);
     }
     setLoading(false);
   };
 
   return (
     <section className="bg-white rounded-2xl shadow-2xl p-8 mb-12">
-      {/* Barra de búsqueda grande */}
-      <form onSubmit={handleSearch} className="relative mb-8">
+      {/* BARRA DE BÚSQUEDA */}
+      <form onSubmit={handleSearch} className="relative mb-10">
+        <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-mc-orange text-2xl">
+          🔍
+        </div>
         <input
           type="text"
           placeholder="Buscar películas..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full px-14 py-5 text-lg rounded-full border-2 border-gray-300 focus:border-mc-orange focus:outline-none shadow-inner"
+          className="w-full pl-16 pr-6 py-5 text-lg rounded-full border-2 border-gray-300 focus:border-mc-orange focus:outline-none shadow-lg transition"
         />
-        <button
-          type="submit"
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-mc-orange text-2xl"
-        >
-        </button>
       </form>
 
-      {/* Filtros */}
-      <div className="flex flex-wrap gap-3 mb-8">
-        <span className="text-gray-700 font-medium">Filtros:</span>
-        <select value={genreFilter} onChange={(e) => setGenreFilter(e.target.value)} className="px-4 py-2 rounded-full border border-gray-300">
-          <option>Género</option>
+      {/* FILTROS */}
+      <div className="flex flex-wrap items-center gap-4 mb-8 text-gray-700">
+        <span className="font-semibold">Filtros:</span>
+        
+        <select
+          value={genreFilter}
+          onChange={(e) => setGenreFilter(e.target.value)}
+          className="px-5 py-2 rounded-full border border-gray-300 bg-white text-sm focus:outline-none focus:border-mc-orange"
+        >
+          <option>Género ▼</option>
           <option>Acción</option>
+          <option>Aventura</option>
           <option>Comedia</option>
           <option>Drama</option>
+          <option>Terror</option>
+          <option>Animación</option>
         </select>
-        <select value={yearFilter} onChange={(e) => setYearFilter(e.target.value)} className="px-4 py-2 rounded-full border border-gray-300">
-          <option>Año</option>
+
+        <select
+          value={yearFilter}
+          onChange={(e) => setYearFilter(e.target.value)}
+          className="px-5 py-2 rounded-full border border-gray-300 bg-white text-sm focus:outline-none focus:border-mc-orange"
+        >
+          <option>Año ▼</option>
           <option>2024</option>
           <option>2023</option>
           <option>2020-2024</option>
+          <option>2010-2019</option>
+          <option>Anterior a 2010</option>
         </select>
-        <select value={ratingFilter} onChange={(e) => setRatingFilter(e.target.value)} className="px-4 py-2 rounded-full border border-gray-300">
-          <option>Valoración</option>
-          <option>8.0+</option>
-          <option>7.0+</option>
+
+        <select
+          value={ratingFilter}
+          onChange={(e) => setRatingFilter(e.target.value)}
+          className="px-5 py-2 rounded-full border border-gray-300 bg-white text-sm focus:outline-none focus:border-mc-orange"
+        >
+          <option>Valoración ▼</option>
+          <option>8.0 o más</option>
+          <option>7.0 o más</option>
+          <option>6.0 o más</option>
         </select>
       </div>
 
-      {/* Resultados */}
-      <h3 className="text-2xl font-bold text-gray-800 mb-6">Resultados</h3>
+      {/* RESULTADOS */}
+      <h3 className="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-mc-red pb-2 inline-block">
+        Resultados
+      </h3>
 
       {loading ? (
-        <p className="text-center text-mc-orange text-xl">Buscando a toda velocidad...</p>
+        <div className="text-center py-16">
+          <p className="text-2xl text-mc-orange font-bold animate-pulse">
+            Buscando a toda velocidad...
+          </p>
+        </div>
       ) : results.length === 0 ? (
-        <p className="text-center text-gray-500 text-lg">Escribe algo para buscar películas</p>
+        <div className="text-center py-16 text-gray-500">
+          <p className="text-xl">
+            {query ? 'No se encontraron películas con ese nombre' : 'Escribe algo para comenzar a buscar'}
+          </p>
+        </div>
       ) : (
         <div className="space-y-6">
           {results.map((movie) => (
-            <div key={movie.imdbID} className="flex gap-6 bg-gray-50 rounded-xl p-6 hover:shadow-xl transition cursor-pointer">
-              <div className="w-32 h-48 bg-gray-200 border-2 border-dashed rounded-xl flex-shrink-0">
-                <img
-                  src={movie.Poster || 'https://via.placeholder.com/300x450?text=Poster'}
-                  alt={movie.Title}
-                  className="w-full h-full object-cover rounded-xl"
-                />
+            <Link
+              key={movie.imdbID}
+              to={`/movie/${movie.imdbID}`}
+              className="block hover:shadow-2xl transition-shadow duration-300"
+            >
+              <div className="flex gap-8 bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-mc-orange transition">
+                {/* Póster */}
+                <div className="w-40 h-60 flex-shrink-0 rounded-xl overflow-hidden shadow-lg border-4 border-white">
+                  <img
+                    src={movie.Poster || 'https://m.media-amazon.com/images/M/MV5BNGQyNjEzNzEtN2U0Yi00ZmI2LTlmMzYtYzEwMzU0M2UyNTVjXkEyXkFqcGdeQXVyNTk5NTQzNDI@._V1_.jpg'}
+                    alt={movie.Title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* Info */}
+                <div className="flex-1">
+                  <h4 className="text-2xl font-bold text-mc-dark mb-2">
+                    {movie.Title || 'Título desconocido'}
+                  </h4>
+                  <p className="text-lg text-gray-600 mb-3">
+                    {movie.Year || 'Año'} • {movie.Genre || 'Género'} • {movie.Runtime || 'Duración'}
+                  </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    {movie.Plot || 'Breve descripción de la película que aparece en los resultados de búsqueda...'}
+                  </p>
+                  {movie.imdbRating && (
+                    <div className="mt-4 inline-block bg-mc-orange text-white px-4 py-2 rounded-full font-bold">
+                      IMDb: {movie.imdbRating}/10
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="flex-1">
-                <h4 className="text-2xl font-bold text-gray-900">{movie.Title || 'Título de la Película'}</h4>
-                <p className="text-gray-600 mt-1">
-                  {movie.Year} • {movie.Genre || 'Acción, Aventura'} • {movie.Runtime || '2h 15min'}
-                </p>
-                <p className="text-gray-700 mt-3">
-                  {movie.Plot || 'Breve descripción de la película que aparece en los resultados de búsqueda...'}
-                </p>
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
