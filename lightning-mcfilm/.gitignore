@@ -25,4 +25,4 @@ dist-ssr
 
 # Environment files
 backend/.env
-```// filepath:
+```// filepath:*.env
