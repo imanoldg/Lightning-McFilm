@@ -1,8 +1,0 @@
-POST http://localhost:5000/api/auth/register
-Content-Type: application/json
-
-{
-  "name": "Rayo McQueen",
-  "email": "mcqueen@lightning.com",
-  "password": "kachow95"
-}
