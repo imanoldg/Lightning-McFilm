@@ -19,3 +19,7 @@ class FavoriteCreate(BaseModel):
     title: str
     year: str
     poster: str
+
+class UserLogin(BaseModel):
+    email: str
+    password: str

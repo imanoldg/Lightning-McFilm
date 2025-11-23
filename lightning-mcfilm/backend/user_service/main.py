@@ -1,8 +1,10 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from . import models, schemas, auth
-from .database import SessionLocal, engine, Base
+import models
+import schemas
+import auth
+from database import SessionLocal, engine, Base
 
 Base.metadata.create_all(bind=engine)
 
@@ -28,13 +30,29 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
     return schemas.UserOut(id=db_user.id, name=db_user.name, email=db_user.email)
 
-@app.post("/login", response_model=schemas.Token)
-def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.email == form.username).first()
-    if not user or not auth.verify_password(form.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Credenciales incorrectas")
-    token = auth.create_access_token({"sub": str(user.id)})
-    return {"access_token": token, "token_type": "bearer"}
+@app.post("/login")
+def login_json(user_data: schemas.UserLogin, db: Session = Depends(get_db)):
+    """
+    Login simple con JSON:
+    {
+      "email": "rayo@kachow.com",
+      "password": "95kachow"
+    }
+ """
+    user = db.query(models.User).filter(models.User.email == user_data.email).first()
+    if not user or not auth.verify_password(user_data.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Email o contraseña incorrectos",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    access_token = auth.create_access_token({"sub": str(user.id)})
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {"id": user.id, "name": user.name, "email": user.email}
+    }
 
 @app.post("/favorites")
 def add_favorite(fav: schemas.FavoriteCreate, db: Session = Depends(get_db)):
