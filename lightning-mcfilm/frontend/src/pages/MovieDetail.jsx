@@ -9,7 +9,7 @@ const MovieDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/movies/search?s=${imdbID}`)
+    fetch(`http://localhost:4000/api/movies/search?s=${imdbID}`)
       .then(r => r.json())
       .then(data => {
         const found = data.movies.find(m => m.imdbID === imdbID);

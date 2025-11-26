@@ -17,7 +17,7 @@ const SearchResults = () => {
 
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/movies/search?s=${encodeURIComponent(query)}`);
+      const res = await fetch(`http://localhost:4000/api/movies/search?s=${encodeURIComponent(query)}`);
       const data = await res.json();
       setResults(data.movies || []);
     } catch (err) {

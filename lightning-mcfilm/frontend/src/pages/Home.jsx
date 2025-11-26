@@ -11,7 +11,7 @@ const Home = () => {
   // Cargar películas recién añadidas
   const loadRecentMovies = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/movies/recent');
+      const res = await fetch('http://localhost:4000/api/movies/recent');
       const data = await res.json();
       setRecentMovies(data.movies || []);
     } catch (err) {
@@ -24,7 +24,7 @@ const Home = () => {
   // Cargar TODAS las películas del caché (MongoDB)
   const loadAllMovies = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/movies/all');
+      const res = await fetch('http://localhost:4000/api/movies/all');
       const data = await res.json();
       setAllMovies(data.movies || []);
     } catch (err) {
