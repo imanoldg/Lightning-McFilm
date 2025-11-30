@@ -2,57 +2,106 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth debe usarse dentro de AuthProvider');
+  }
+  return context;
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('🔐 AuthProvider: Inicializando...');
     const token = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
+    
     if (token && savedUser) {
-      setUser(JSON.parse(savedUser));
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
+        console.log('✅ Sesión restaurada:', parsedUser);
+      } catch (err) {
+        console.error('❌ Error parseando usuario:', err);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
+    } else {
+      console.log('ℹ️ No hay sesión guardada');
     }
+    
     setLoading(false);
   }, []);
 
   const login = async (email, password) => {
-    const res = await fetch('http://localhost:4000/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
+    try {
+      console.log('🔑 Intentando login:', { email });
+      
+      const res = await fetch('http://localhost:4000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
 
-    const data = await res.json();
+      console.log('📡 Respuesta login:', res.status);
 
-    if (!res.ok) {
-      throw new Error(data.detail || 'Email o contraseña incorrectos');
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error('❌ Error en login:', errorData);
+        throw new Error(errorData.detail || 'Email o contraseña incorrectos');
+      }
+
+      const data = await res.json();
+      console.log('✅ Login exitoso:', data);
+
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user);
+      
+      return data;
+    } catch (error) {
+      console.error('❌ Error en login:', error);
+      throw error;
     }
-
-    localStorage.setItem('token', data.access_token);
-    localStorage.setItem('user', JSON.stringify(data.user));
-    setUser(data.user);
   };
 
   const register = async (name, email, password) => {
-    const res = await fetch('http://localhost:4000/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password })
-    });
+    try {
+      console.log('📝 Intentando registro:', { name, email });
+      
+      const res = await fetch('http://localhost:4000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
 
-    const data = await res.json();
+      console.log('📡 Respuesta registro:', res.status);
 
-    if (!res.ok) {
-      throw new Error(data.detail || 'Error al registrarse');
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error('❌ Error en registro:', errorData);
+        throw new Error(errorData.detail || 'Error al registrarse');
+      }
+
+      const data = await res.json();
+      console.log('✅ Registro exitoso:', data);
+
+      // Login automático tras registro
+      console.log('🔄 Haciendo login automático...');
+      await login(email, password);
+      
+      return data;
+    } catch (error) {
+      console.error('❌ Error en register:', error);
+      throw error;
     }
-
-    // Login automático tras registro
-    await login(email, password);
   };
 
   const logout = () => {
+    console.log('👋 Cerrando sesión...');
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
@@ -12,26 +12,59 @@ import MyLists from './pages/MyLists.jsx';
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
-  if (loading) return <div className="flex items-center justify-center min-h-screen"><p>Cargando...</p></div>;
-  if (!user) return <Navigate to="/login" replace />;
+  console.log('🛡️ ProtectedRoute:', { user, loading });
 
+  if (loading) {
+    console.log('⏳ Cargando autenticación...');
+    return <div className="flex items-center justify-center min-h-screen"><p>Cargando...</p></div>;
+  }
+  
+  if (!user) {
+    console.log('❌ No autenticado, redirigiendo a login');
+    return <Navigate to="/login" replace />;
+  }
+
+  console.log('✅ Usuario autenticado, mostrando contenido');
   return children;
 };
 
 function AppContent() {
   const { user } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log('📍 Navegando a:', location.pathname);
+    console.log('👤 Usuario actual:', user);
+  }, [location.pathname, user]);
 
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      <Route element={<ProtectedRoute />}>
-        <Route path="/home" element={<Home />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/movie/:imdbID" element={<MovieDetail />} />
-        <Route path="/my-lists" element={<MyLists />} />
-      </Route>
+      <Route path="/home" element={
+        <ProtectedRoute>
+          <Home />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/search" element={
+        <ProtectedRoute>
+          <Search />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/movie/:imdbID" element={
+        <ProtectedRoute>
+          <MovieDetail />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/my-lists" element={
+        <ProtectedRoute>
+          <MyLists />
+        </ProtectedRoute>
+      } />
 
       <Route path="/" element={<Navigate to={user ? "/home" : "/login"} />} />
       <Route path="*" element={<Navigate to="/" />} />
@@ -40,6 +73,8 @@ function AppContent() {
 }
 
 function App() {
+  console.log('🚀 App iniciada');
+  
   return (
     <AuthProvider>
       <AppContent />

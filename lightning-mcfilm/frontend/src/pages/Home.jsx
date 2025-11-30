@@ -3,19 +3,29 @@ import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 
 const Home = () => {
-  const [recentMovies, setRecentMovies] = useState([]);     // Recién añadidas
-  const [allMovies, setAllMovies] = useState([]);           // TODAS las películas del catálogo
+  const [recentMovies, setRecentMovies] = useState([]);
+  const [allMovies, setAllMovies] = useState([]);
   const [loadingRecent, setLoadingRecent] = useState(true);
   const [loadingAll, setLoadingAll] = useState(true);
+  const [errorRecent, setErrorRecent] = useState(null);
+  const [errorAll, setErrorAll] = useState(null);
 
   // Cargar películas recién añadidas
   const loadRecentMovies = async () => {
     try {
+      console.log('🎬 Cargando películas recientes...');
       const res = await fetch('http://localhost:4000/api/movies/recent');
+      
+      if (!res.ok) {
+        throw new Error(`Error HTTP: ${res.status}`);
+      }
+      
       const data = await res.json();
+      console.log('✅ Películas recientes cargadas:', data);
       setRecentMovies(data.movies || []);
     } catch (err) {
-      console.error('Error cargando recientes:', err);
+      console.error('❌ Error cargando recientes:', err);
+      setErrorRecent(err.message);
     } finally {
       setLoadingRecent(false);
     }
@@ -24,17 +34,26 @@ const Home = () => {
   // Cargar TODAS las películas del caché (MongoDB)
   const loadAllMovies = async () => {
     try {
+      console.log('🎬 Cargando todas las películas...');
       const res = await fetch('http://localhost:4000/api/movies/all');
+      
+      if (!res.ok) {
+        throw new Error(`Error HTTP: ${res.status}`);
+      }
+      
       const data = await res.json();
+      console.log('✅ Todas las películas cargadas:', data);
       setAllMovies(data.movies || []);
     } catch (err) {
-      console.error('Error cargando todas las películas:', err);
+      console.error('❌ Error cargando todas las películas:', err);
+      setErrorAll(err.message);
     } finally {
       setLoadingAll(false);
     }
   };
 
   useEffect(() => {
+    console.log('🚀 Componente Home montado');
     loadRecentMovies();
     loadAllMovies();
   }, []);
@@ -86,6 +105,16 @@ const Home = () => {
           </h2>
           {loadingRecent ? (
             <p className="text-center text-2xl text-mc-dark">Cargando novedades...</p>
+          ) : errorRecent ? (
+            <div className="text-center">
+              <p className="text-xl text-red-600 mb-4">Error: {errorRecent}</p>
+              <button 
+                onClick={loadRecentMovies}
+                className="px-6 py-3 bg-mc-red text-white rounded-lg hover:bg-mc-red/90"
+              >
+                Reintentar
+              </button>
+            </div>
           ) : recentMovies.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
               {recentMovies.map((movie) => (
@@ -111,6 +140,16 @@ const Home = () => {
           </h2>
           {loadingAll ? (
             <p className="text-center text-2xl text-mc-dark">Cargando todo el catálogo...</p>
+          ) : errorAll ? (
+            <div className="text-center">
+              <p className="text-xl text-red-600 mb-4">Error: {errorAll}</p>
+              <button 
+                onClick={loadAllMovies}
+                className="px-6 py-3 bg-mc-red text-white rounded-lg hover:bg-mc-red/90"
+              >
+                Reintentar
+              </button>
+            </div>
           ) : allMovies.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
               {allMovies.map((movie) => (
