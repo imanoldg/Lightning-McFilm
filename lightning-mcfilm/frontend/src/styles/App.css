@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  padding-top: 140px !important; /* AJUSTA ESTE NÚMERO SEGÚN LA ALTURA DE TU HEADER */
+}
+
 @layer utilities {
   /* Fondo principal (original: bg-gray-100) -> Azul claro para un fondo inspirado en el cielo de Radiator Springs */
   .bg-gray-100 {

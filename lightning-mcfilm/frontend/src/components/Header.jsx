@@ -26,7 +26,7 @@ const Header = () => {
   }
 
   return (
-    <header className="bg-mc-red py-6 shadow-2xl fixed top-0 left-0 right-0 z-50">
+    <header className="bg-mc-red py-6 shadow-2xl fixed top-0 left-0 right-0 z-50 mb-10">
       <div className="container mx-auto px-6 flex justify-between items-center">
         <Link to="/home">
           <img src={logoHeader} alt="Lightning McFilm" className="w-24 h-20 object-contain drop-shadow-2xl" />
@@ -40,7 +40,8 @@ const Header = () => {
 
         {user ? (
           <div className="flex items-center gap-5">
-            <span className="text-white font-medium text-lg hidden sm:block">{user.name}</span>
+            <Link to="/profile" className="text-white hover:text-mc-orange"><span className="text-white font-medium text-lg hidden sm:block">{user.name}</span></Link>
+            
             <button
               onClick={handleLogout}
               className="px-5 py-2.5 bg-white text-mc-red text-sm font-bold rounded-lg shadow-md hover:bg-gray-100 transition-all active:scale-95"

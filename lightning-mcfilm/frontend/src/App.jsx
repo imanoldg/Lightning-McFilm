@@ -7,6 +7,7 @@ import Home from './pages/Home.jsx';
 import Search from './pages/Search.jsx';
 import MovieDetail from './pages/MovieDetail.jsx';
 import MyLists from './pages/MyLists.jsx';
+import UserProfile from './pages/UserProfile.jsx';
 
 // Componente para proteger rutas
 const ProtectedRoute = ({ children }) => {
@@ -63,6 +64,12 @@ function AppContent() {
       <Route path="/my-lists" element={
         <ProtectedRoute>
           <MyLists />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/profile" element={
+        <ProtectedRoute>
+          <UserProfile />
         </ProtectedRoute>
       } />
 
