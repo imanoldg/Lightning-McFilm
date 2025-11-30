@@ -85,33 +85,30 @@ app.use('/api/movies', async (req, res) => {
   }
 });
 
-// ====================
-// AUTH SERVICE - PROXY COMPLETO (login, logout, listas, etc.)
+/// ====================
+// AUTH + LISTAS (favorites, watched, watchlist, my-lists, logout)
 // ====================
 app.use([
   '/api/auth',
   '/logout',
   '/favorites',
   '/watched',
-  '/watchlist',
-  '/my-lists'
+  '/watchlist',      // AÑADIDO CORRECTAMENTE
+  '/my-lists',
+  '/upload-avatar'   // por si ya lo tienes
 ], async (req, res) => {
-  // Reconstruye la ruta real sin el prefijo que usamos para capturar
+
   let cleanPath = req.originalUrl;
 
+  // Quitar /api/auth si viene
   if (req.originalUrl.startsWith('/api/auth')) {
     cleanPath = req.originalUrl.replace('/api/auth', '');
-  } else if (['/logout', '/favorites', '/watched', '/watchlist', '/my-lists'].some(p => req.originalUrl.startsWith(p))) {
-    cleanPath = req.originalUrl;
   }
 
   const targetUrl = `http://localhost:8000${cleanPath || '/'}`;
 
-  console.log('AUTH [IN]  →', req.method, req.originalUrl);
-  console.log('AUTH [OUT] →', targetUrl);
-  if (req.headers.authorization) {
-    console.log('TOKEN ENVIADO →', req.headers.authorization.substring(0, 30) + '...');
-  }
+  console.log('AUTH/LIST [IN]  →', req.method, req.originalUrl);
+  console.log('AUTH/LIST [OUT] →', targetUrl);
 
   try {
     const response = await axios({
@@ -120,18 +117,15 @@ app.use([
       data: req.body,
       headers: {
         'Content-Type': 'application/json',
-        // ESTO ES CLAVE: REENVIAR EL TOKEN
-        'Authorization': req.headers.authorization || ''
+        'Authorization': req.headers['authorization'] || ''
       },
       timeout: 30000
     });
 
-    console.log('AUTH [RES] Status:', response.status);
     res.status(response.status).json(response.data);
   } catch (error) {
-    console.error('AUTH ERROR:', error.message);
+    console.error('AUTH/LIST ERROR:', error.message);
     if (error.response) {
-      console.error('AUTH RESPONSE:', error.response.status, error.response.data);
       res.status(error.response.status).json(error.response.data);
     } else {
       res.status(504).json({ error: 'User Service no responde' });

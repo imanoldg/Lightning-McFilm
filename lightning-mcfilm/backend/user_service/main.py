@@ -145,8 +145,9 @@ def add_watched(
     db.commit()
     return {"message": "Marcado como vista"}
 
+
 # --- AÑADIR / QUITAR PENDIENTE ---
-@app.post("/watchlist", status_code=status.HTTP_201_CREATED)
+@app.post("/watchlist")        # ← ¡AÑADE ESTA LÍNEA, JODER!
 def add_to_watchlist(
     item: schemas.WatchlistCreate,
     current_user: models.User = Depends(get_current_user),
@@ -160,12 +161,12 @@ def add_to_watchlist(
     if existing:
         db.delete(existing)
         db.commit()
-        return {"message": "Eliminado de pendientes"}
-    
+        return {"message": "Eliminado de pendientes", "added": False}
+
     new_item = models.Watchlist(**item.dict(), user_id=current_user.id)
     db.add(new_item)
     db.commit()
-    return {"message": "Añadido a pendientes"}
+    return {"message": "Añadido a pendientes", "added": True}
 
 # --- OBTENER TODAS LAS LISTAS ---
 @app.get("/my-lists")

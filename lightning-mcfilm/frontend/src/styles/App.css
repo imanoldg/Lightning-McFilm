@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 body {
-  padding-top: 140px !important; /* AJUSTA ESTE NÚMERO SEGÚN LA ALTURA DE TU HEADER */
+  padding-top: 100px !important; /* AJUSTA ESTE NÚMERO SEGÚN LA ALTURA DE TU HEADER */
 }
 
 @layer utilities {

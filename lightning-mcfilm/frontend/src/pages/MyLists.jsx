@@ -109,13 +109,13 @@ const MyLists = () => {
         </h1>
 
         {/* Favoritas */}
-        {renderSection('Películas de Terror Favoritas', 'favorites', 'bg-mc-red')}
+        {renderSection('Favoritas', 'favorites', 'bg-mc-red')}
 
         {/* Vistas */}
-        {renderSection('Clásicos que Todo el Mundo Debería Ver', 'watched', 'bg-mc-orange')}
+        {renderSection('Vistas', 'watched', 'bg-mc-orange')}
 
         {/* Pendientes */}
-        {renderSection('Para Ver Este Mes', 'pending', 'bg-gray-700')}
+        {renderSection('Pendientes', 'pending', 'bg-gray-700')}
 
         {/* Botón crear nueva lista */}
         <div className="text-center mt-20">

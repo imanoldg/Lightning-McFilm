@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 
 const UserProfile = () => {
   const { user } = useAuth();
-  const [lists, setLists] = useState({ favorites: [], watched: [], pending: [] });
+  const [lists, setLists] = useState({ favorites: [], watched: [],});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,7 +26,6 @@ const UserProfile = () => {
           setLists({
             favorites: data.favorites || [],
             watched: data.watched || [],
-            pending: data.watchlist || []
           });
         }
       } catch (err) {
@@ -47,8 +46,8 @@ const UserProfile = () => {
     );
   }
 
-  const totalMovies = lists.favorites.length + lists.watched.length + lists.pending.length;
-  const totalLists = 3;
+  const totalMovies = lists.favorites.length + lists.watched.length;
+  const totalLists = 2;
 
   const recentWatched = [...lists.watched].reverse().slice(0, 10);
   const recentFavorites = [...lists.favorites].reverse().slice(0, 10);

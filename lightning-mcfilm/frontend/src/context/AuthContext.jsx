@@ -169,7 +169,7 @@ const toggleWatchlist = async (movie) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'urauthorization': `Bearer ${token}`
+      'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify({
       imdbID: movie.imdbID,
