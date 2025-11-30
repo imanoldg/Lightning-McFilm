@@ -123,6 +123,55 @@ router.get('/search', async (req, res) => {
   }
 });
 
+// ==================== DETALLE POR imdbID ====================
+router.get('/detail/:imdbID', async (req, res) => {
+  const { imdbID } = req.params;
+
+  try {
+    // 1. Primero buscamos en MongoDB (caché)
+    let movie = await Movie.findOne({ imdbID });
+
+    // Si está en caché → devolvemos directamente
+    if (movie) {
+      console.log(`Detalle desde caché: ${movie.Title}`);
+      return res.json(movie);
+    }
+
+    // 2. Si no está, la buscamos en OMDB y la guardamos
+    const apiKey = process.env.OMDB_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'Falta OMDB API key' });
+
+    await delay(1100); // rate limit
+    const detailUrl = `${OMDB_URL}?apikey=${apiKey}&i=${imdbID}&plot=short`;
+    const response = await axios.get(detailUrl);
+
+    if (response.data.Response === 'False') {
+      return res.status(404).json({ error: 'Película no encontrada en OMDB' });
+    }
+
+    const fullMovie = response.data;
+    const finalPoster = (fullMovie.Poster && fullMovie.Poster !== 'N/A') 
+      ? fullMovie.Poster 
+      : DEFAULT_POSTER;
+
+    const movieToSave = { ...fullMovie, Poster: finalPoster };
+
+    // Guardamos en caché
+    await Movie.updateOne(
+      { imdbID },
+      { $set: { ...movieToSave, cachedAt: new Date() } },
+      { upsert: true }
+    );
+
+    console.log(`Detalle desde OMDB + guardado: ${movieToSave.Title}`);
+    res.json(movieToSave);
+
+  } catch (error) {
+    console.error('Error en /detail/:imdbID:', error.message);
+    res.status(500).json({ error: 'Error interno' });
+  }
+});
+
 // ========================
 // ENDPOINTS DE CATÁLOGO
 // ========================

@@ -107,8 +107,84 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  
+const toggleFavorite = async (movie) => {
+  const token = localStorage.getItem('token');
+  console.log('TOKEN que envío:', token); // ← AÑADE ESTO
+
+  if (!token) {
+    alert('No hay token, inicia sesión');
+    return false;
+  }
+
+  const res = await fetch('http://localhost:8000/favorites', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      imdbID: movie.imdbID || movie.imdbID,
+      title: movie.Title || movie.title,
+      year: movie.Year || movie.year,
+      poster: movie.Poster || movie.poster
+    })
+  });
+
+  console.log('Respuesta del backend:', res.status); // ← AÑADE ESTO
+  return res.ok;
+};
+
+const toggleWatched = async (movie) => {
+  const token = localStorage.getItem('token');
+  console.log('TOKEN watched:', token);
+
+  if (!token) return false;
+
+  const res = await fetch('http://localhost:8000/watched', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      imdbID: movie.imdbID,
+      title: movie.Title,
+      year: movie.Year,
+      poster: movie.Poster
+    })
+  });
+
+  console.log('Watched status:', res.status);
+  return res.ok;
+};
+
+const toggleWatchlist = async (movie) => {
+  const token = localStorage.getItem('token');
+  console.log('TOKEN watchlist:', token);
+
+  if (!token) return false;
+
+  const res = await fetch('http://localhost:8000/watchlist', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'urauthorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      imdbID: movie.imdbID,
+      title: movie.Title,
+      year: movie.Year,
+      poster: movie.Poster
+    })
+  });
+
+  console.log('Watchlist status:', res.status);
+  return res.ok;
+};
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, register, logout, loading, toggleFavorite, toggleWatched, toggleWatchlist }}>
       {children}
     </AuthContext.Provider>
   );

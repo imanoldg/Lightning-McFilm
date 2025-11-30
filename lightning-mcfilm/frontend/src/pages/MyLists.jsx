@@ -4,96 +4,125 @@ import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 
 const MyLists = () => {
-  const [favorites, setFavorites] = useState([]);
+  const [lists, setLists] = useState({
+    favorites: [],
+    watched: [],
+    pending: []
+  });
   const [loading, setLoading] = useState(true);
 
-  // Simulamos carga de favoritos del usuario (luego será desde el backend con JWT)
   useEffect(() => {
-    // Aquí iría la llamada real: fetch('/api/user/favorites', { headers: { Authorization: token } })
-    // Por ahora, cargamos algunas películas de ejemplo (puedes borrar esto cuando tengas backend)
-    const mockFavorites = [
-      { imdbID: "tt0317219", Title: "Cars", Year: "2006", Poster: "https://m.media-amazon.com/images/M/MV5BMTY2NzYxNTRjM15BMl5BanBnXkFtZTcwMjI0MTA0MQ@@._V1_.jpg", Genre: "Animación, Aventura", Runtime: "117 min" },
-      { imdbID: "tt121 NEW6475", Title: "Cars 2", Year: "2011", Poster: "https://m.media-amazon.com/images/M/MV5BMTQzODAyNTM0MF5BMl5BanBnXkFtZTcwODA3NDg1NA@@._V1_.jpg", Genre: "Animación, Acción", Runtime: "106 min" },
-      { imdbID: "tt2948372", Title: "Soul", Year: "2020", Poster: "https://m.media-amazon.com/images/M/MV5BZGE1MDg5M2MtNTkyZS00MTQ5LTg4N2ItZTcyNWQ2Y2Q1NmRhXkEyXkFqcGdeQXVyNjI3MjcwMDM@._V1_.jpg", Genre: "Animación, Drama", Runtime: "100 min" },
-      { imdbID: "tt1979376", Title: "Toy Story 4", Year: "2019", Poster: "https://m.media-amazon.com/images/M/MV5BMTYzMDM4NzkxOV5BMl5BanBnXkFtZTgwNzM1Mzg2NzM@._V1_.jpg", Genre: "Animación, Comedia", Runtime: "100 min" },
-    ];
+    const fetchLists = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setLoading(false);
+        return;
+      }
 
-    setFavorites(mockFavorites);
-    setLoading(false);
+      try {
+        const res = await fetch('http://localhost:4000/my-lists', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setLists({
+            favorites: data.favorites || [],
+            watched: data.watched || [],
+            pending: data.watchlist || []
+          });
+        } else {
+          console.error('Error al cargar listas:', res.status);
+        }
+      } catch (err) {
+        console.error('Error de red:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLists();
   }, []);
 
-  const removeFromFavorites = (imdbID) => {
-    setFavorites(favorites.filter(m => m.imdbID !== imdbID));
-    // Aquí iría: fetch(`/api/user/favorites/${imdbID}`, { method: 'DELETE' })
+  const removeFromList = (imdbID, listType) => {
+    setLists(prev => ({
+      ...prev,
+      [listType]: prev[listType].filter(m => m.imdbID !== imdbID)
+    }));
   };
 
+  const renderSection = (title, key, countColor) => (
+    <section className="mb-16">
+      <h2 className="text-3xl font-bold text-gray-800 mb-4">{title}</h2>
+      <div className="mb-6">
+        <span className={`inline-block px-5 py-2 rounded-full text-white font-bold text-lg ${countColor}`}>
+          {lists[key].length} película{lists[key].length !== 1 ? 's' : ''}
+        </span>
+      </div>
+
+      {lists[key].length === 0 ? (
+        <p className="text-gray-500 italic text-lg">Aún no has añadido nada aquí</p>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
+          {lists[key].map(movie => (
+            <div key={movie.imdbID} className="group relative">
+              <Link to={`/movie/${movie.imdbID}`}>
+                <div className="aspect-w-2 aspect-h-3 bg-gray-200 border-2 border-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition">
+                  <img
+                    src={movie.poster || movie.Poster || 'https://via.placeholder.com/300x450?text=Sin+Póster'}
+                    alt={movie.title || movie.Title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </Link>
+              <button
+                onClick={() => removeFromList(movie.imdbID, key)}
+                className="absolute top-2 right-2 bg-white text-mc-red rounded-full w-9 h-9 flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition text-xl font-bold hover:bg-gray-100"
+                title="Quitar de la lista"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-mc-light-blue flex items-center justify-center">
+        <p className="text-4xl font-bold text-mc-red animate-pulse">Cargando tus listas...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-mc-light-blue via-white to-mc-light-blue">
+    <div className="min-h-screen bg-mc-light-blue">
       <Header />
 
       <main className="container mx-auto px-6 py-12">
-        {/* Título principal */}
-        <div className="text-center mb-16">
-          <h1 className="text-6xl font-bold text-mc-red drop-shadow-2xl mb-4">
-            Mis Listas
-          </h1>
-          <p className="text-2xl text-mc-dark">
-            Tus películas favoritas en un solo lugar
-          </p>
+        <h1 className="text-5xl font-bold text-center text-mc-red mb-12 drop-shadow-lg">
+          Mis Listas de Películas
+        </h1>
+
+        {/* Favoritas */}
+        {renderSection('Películas de Terror Favoritas', 'favorites', 'bg-mc-red')}
+
+        {/* Vistas */}
+        {renderSection('Clásicos que Todo el Mundo Debería Ver', 'watched', 'bg-mc-orange')}
+
+        {/* Pendientes */}
+        {renderSection('Para Ver Este Mes', 'pending', 'bg-gray-700')}
+
+        {/* Botón crear nueva lista */}
+        <div className="text-center mt-20">
+          <button className="inline-flex items-center gap-3 px-10 py-5 bg-white text-mc-red font-bold text-2xl rounded-full shadow-2xl hover:shadow-red-600/50 hover:bg-gray-50 transition transform hover:scale-105">
+            + Crear Nueva Lista
+          </button>
         </div>
-
-        {/* Contador */}
-        <div className="text-center mb-10">
-          <span className="inline-block bg-mc-orange text-white text-xl font-bold px-8 py-4 rounded-full shadow-xl">
-            {favorites.length} película{favorites.length !== 1 ? 's' : ''} en tu lista
-          </span>
-        </div>
-
-        {/* Lista de películas */}
-        {loading ? (
-          <p className="text-center text-3xl text-mc-orange animate-pulse">Cargando tus favoritos...</p>
-        ) : favorites.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-3xl text-gray-600 mb-6">¡Tu lista está vacía!</p>
-            <Link
-              to="/search"
-              className="inline-block px-10 py-5 bg-mc-red text-white text-xl font-bold rounded-full hover:bg-mc-red/90 transition shadow-xl"
-            >
-              Buscar películas
-            </Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
-            {favorites.map((movie) => (
-              <div
-                key={movie.imdbID}
-                className="group relative bg-white rounded-2xl shadow-2xl overflow-hidden border-4 border-mc-red hover:border-mc-orange transition transform hover:scale-105"
-              >
-                <Link to={`/movie/${movie.imdbID}`}>
-                  <img
-                    src={movie.Poster}
-                    alt={movie.Title}
-                    className="w-full h-96 object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-10 group-hover:translate-y-0 transition">
-                    <h3 className="text-2xl font-bold mb-2">{movie.Title}</h3>
-                    <p className="text-sm opacity-90">{movie.Year} • {movie.Genre}</p>
-                  </div>
-                </Link>
-
-                {/* Botón eliminar */}
-                <button
-                  onClick={() => removeFromFavorites(movie.imdbID)}
-                  className="absolute top-4 right-4 bg-mc-red text-white p-3 rounded-full shadow-xl hover:bg-red-700 transition transform hover:scale-110"
-                  title="Quitar de favoritos"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
       </main>
 
       <Footer />

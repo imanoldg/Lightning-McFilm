@@ -1,0 +1,200 @@
+openapi: 3.0.3
+info:
+  title: Lightning McFilm API
+  description: |
+    API Gateway unificado para Lightning McFilm
+
+    **Microservicios:**
+    - **Auth Service** → http://localhost:8000
+    - **Movie Service** → http://localhost:4000/api/movies
+    - **Gateway** → http://localhost:4000
+
+    ¡Ka-chow!
+  version: 2.2.1
+
+servers:
+  - url: http://localhost:4000
+    description: Gateway Local
+  - url: http://localhost:8000
+    description: Auth Service Directo (para login/logout)
+
+tags:
+  - name: Auth Service
+    description: Gestión de usuarios y listas personales
+  - name: Movie Service
+    description: Catálogo y búsqueda de películas
+  - name: Gateway
+    description: Salud del sistema
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UserRegister:
+      type: object
+      required: [name, email, password]
+      properties:
+        name: { type: string, example: "Rayo McQueen" }
+        email: { type: string, format: email, example: "rayo@kachow.com" }
+        password: { type: string, format: password, example: "95kachow" }
+
+    UserLogin:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+
+    ListItem:
+      type: object
+      required: [imdbID, title]
+      properties:
+        imdbID: { type: string, example: "tt0317219" }
+        title: { type: string, example: "Cars" }
+        year: { type: string, example: "2006" }
+        poster: { type: string, format: uri }
+
+security:
+  - bearerAuth: []
+
+paths:
+  /api/auth/register:
+    post:
+      tags: [Auth Service]
+      summary: Registrar usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UserRegister' }
+      responses:
+        '201': { description: Usuario creado }
+
+  /api/auth/login:
+    post:
+      tags: [Auth Service]
+      summary: Login de usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UserLogin' }
+      responses:
+        '200': { description: Token JWT + datos de usuario }
+
+  /logout:
+    post:
+      servers:
+        - url: http://localhost:8000
+      tags: [Auth Service]
+      summary: Cerrar sesión (Logout)
+      description: |
+        Invalida la sesión actual.
+        El token se elimina en el frontend (localStorage).
+        ¡KA-CHOW! Nos vemos en la pista.
+      responses:
+        '200':
+          description: Logout exitoso
+          content:
+            application/json:
+              example:
+                message: "KA-CHOW! Sesión cerrada con estilo"
+                detail: "¡Vuelve pronto, campeón!"
+                status: "success"
+
+  /favorites:
+    post:
+      servers:
+        - url: http://localhost:8000
+      tags: [Auth Service]
+      summary: Toggle favorito
+      security: [bearerAuth: []]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ListItem' }
+      responses:
+        '201': { description: Añadido o eliminado de favoritos }
+
+  /watched:
+    post:
+      servers:
+        - url: http://localhost:8000
+      tags: [Auth Service]
+      summary: Marcar como vista (toggle)
+      security: [bearerAuth: []]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ListItem' }
+      responses:
+        '201': { description: Marcado o desmarcado }
+
+  /watchlist:
+    post:
+      servers:
+        - url: http://localhost:8000
+      tags: [Auth Service]
+      summary: Añadir/Quitar pendiente (toggle)
+      security: [bearerAuth: []]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ListItem' }
+      responses:
+        '201': { description: Añadido o eliminado }
+
+  /my-lists:
+    get:
+      servers:
+        - url: http://localhost:8000
+      tags: [Auth Service]
+      summary: Obtener todas mis listas
+      security: [bearerAuth: []]
+      responses:
+        '200':
+          description: Listas del usuario
+          content:
+            application/json:
+              example:
+                favorites: [...]
+                watched: [...]
+                watchlist: [...]
+
+  /api/movies/search:
+    get:
+      tags: [Movie Service]
+      summary: Buscar películas
+      parameters:
+        - name: s
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Resultados de búsqueda }
+
+  /api/movies/detail/{imdbID}:
+    get:
+      tags: [Movie Service]
+      summary: Detalle completo de película
+      parameters:
+        - name: imdbID
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Película completa con todos los datos }
+
+  /api/health:
+    get:
+      tags: [Gateway]
+      summary: Estado del sistema
+      responses:
+        '200': { description: OK }
