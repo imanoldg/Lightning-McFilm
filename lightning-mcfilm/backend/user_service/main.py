@@ -8,9 +8,13 @@ import auth
 from database import SessionLocal, engine, Base
 from fastapi.middleware.cors import CORSMiddleware
 
-Base.metadata.create_all(bind=engine)
-
 app = FastAPI(title="Lightning McFilm - User Service")
+
+
+# Crear tablas SOLO cuando FastAPI arranca
+@app.on_event("startup")
+def startup():
+    Base.metadata.create_all(bind=engine)
 
 # CORS
 app.add_middleware(

@@ -3,8 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/icono_LMF.ico" />
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icon-192.png">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="McFilm">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+
+    <meta name="theme-color" content="#FF0000">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lightning McFilm</title>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .catch(err => console.error('SW registration failed:', err));
+        });
+      }
+
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('beforeinstallprompt disparado – YA PUEDES INSTALAR!');
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        const installButton = document.createElement('button');
+        installButton.innerHTML = 'Instalar Lightning McFilm';
+        installButton.className = 'fixed bottom-4 right-4 z-50 bg-mc-red text-white px-6 py-3 rounded-full shadow-2xl font-bold text-lg animate-pulse';
+        installButton.onclick = () => {
+          installButton.style.display = 'none';
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then(() => {
+            deferredPrompt = null;
+          });
+        };
+        document.body.appendChild(installButton);
+      });
+    </script>
+
   </head>
   <body>
     <div id="root"></div>
