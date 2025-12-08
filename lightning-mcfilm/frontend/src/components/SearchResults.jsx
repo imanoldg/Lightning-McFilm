@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const SearchResults = () => {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Filtros (simulados por ahora, se pueden conectar después)
   const [genreFilter, setGenreFilter] = useState('Todos');
   const [yearFilter, setYearFilter] = useState('Todos');
   const [ratingFilter, setRatingFilter] = useState('Todos');
@@ -29,30 +30,28 @@ const SearchResults = () => {
 
   return (
     <section className="bg-white rounded-2xl shadow-2xl p-8 mb-12">
-      {/* BARRA DE BÚSQUEDA */}
       <form onSubmit={handleSearch} className="relative mb-10">
         <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-mc-orange text-2xl">
           🔍
         </div>
         <input
           type="text"
-          placeholder="Buscar películas..."
+          placeholder={t('search.placeholder')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="w-full pl-16 pr-6 py-5 text-lg rounded-full border-2 border-gray-300 focus:border-mc-orange focus:outline-none shadow-lg transition"
         />
       </form>
 
-      {/* FILTROS */}
       <div className="flex flex-wrap items-center gap-4 mb-8 text-gray-700">
-        <span className="font-semibold">Filtros:</span>
+        <span className="font-semibold">{t('search.filters.title')}</span>
         
         <select
           value={genreFilter}
           onChange={(e) => setGenreFilter(e.target.value)}
           className="px-5 py-2 rounded-full border border-gray-300 bg-white text-sm focus:outline-none focus:border-mc-orange"
         >
-          <option>Género ▼</option>
+          <option>{t('search.filters.genre')}</option>
           <option>Acción</option>
           <option>Aventura</option>
           <option>Comedia</option>
@@ -66,7 +65,7 @@ const SearchResults = () => {
           onChange={(e) => setYearFilter(e.target.value)}
           className="px-5 py-2 rounded-full border border-gray-300 bg-white text-sm focus:outline-none focus:border-mc-orange"
         >
-          <option>Año ▼</option>
+          <option>{t('search.filters.year')}</option>
           <option>2024</option>
           <option>2023</option>
           <option>2020-2024</option>
@@ -79,28 +78,27 @@ const SearchResults = () => {
           onChange={(e) => setRatingFilter(e.target.value)}
           className="px-5 py-2 rounded-full border border-gray-300 bg-white text-sm focus:outline-none focus:border-mc-orange"
         >
-          <option>Valoración ▼</option>
+          <option>{t('search.filters.rating')}</option>
           <option>8.0 o más</option>
           <option>7.0 o más</option>
           <option>6.0 o más</option>
         </select>
       </div>
 
-      {/* RESULTADOS */}
       <h3 className="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-mc-red pb-2 inline-block">
-        Resultados
+        {t('search.results.title')}
       </h3>
 
       {loading ? (
         <div className="text-center py-16">
           <p className="text-2xl text-mc-orange font-bold animate-pulse">
-            Buscando a toda velocidad...
+            {t('search.results.searching')}
           </p>
         </div>
       ) : results.length === 0 ? (
         <div className="text-center py-16 text-gray-500">
           <p className="text-xl">
-            {query ? 'No se encontraron películas con ese nombre' : 'Escribe algo para comenzar a buscar'}
+            {query ? t('search.results.noResultsFound') : t('search.results.startTyping')}
           </p>
         </div>
       ) : (
@@ -112,7 +110,6 @@ const SearchResults = () => {
               className="block hover:shadow-2xl transition-shadow duration-300"
             >
               <div className="flex gap-8 bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-mc-orange transition">
-                {/* Póster */}
                 <div className="w-40 h-60 flex-shrink-0 rounded-xl overflow-hidden shadow-lg border-4 border-white">
                   <img
                     src={movie.Poster || 'https://m.media-amazon.com/images/M/MV5BNGQyNjEzNzEtN2U0Yi00ZmI2LTlmMzYtYzEwMzU0M2UyNTVjXkEyXkFqcGdeQXVyNTk5NTQzNDI@._V1_.jpg'}
@@ -121,7 +118,6 @@ const SearchResults = () => {
                   />
                 </div>
 
-                {/* Info */}
                 <div className="flex-1">
                   <h4 className="text-2xl font-bold text-mc-dark mb-2">
                     {movie.Title || 'Título desconocido'}

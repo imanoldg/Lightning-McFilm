@@ -1,0 +1,89 @@
+{
+  "header": {
+    "home": "Inicio",
+    "search": "Buscar",
+    "lists": "Mis Listas",
+    "profile": "Perfil",
+    "logout": "Salir"
+  },
+  "login": {
+    "title": "Bienvenido de nuevo",
+    "email": "Email",
+    "password": "Contraseña",
+    "login": "Entrar",
+    "noAccount": "¿No tienes cuenta?",
+    "register": "Regístrate",
+    "loading": "Entrando..."
+  },
+  "register": {
+    "title": "Crea tu cuenta",
+    "name": "Nombre",
+    "email": "Email",
+    "password": "Contraseña",
+    "register": "Registrarse",
+    "haveAccount": "¿Ya tienes cuenta?",
+    "login": "Inicia sesión",
+    "loading": "Creando..."
+  },
+  "home": {
+    "title": "Lightning McFilm",
+    "popular": "Películas populares del momento",
+    "recent": "Recién añadidas al catálogo",
+    "all": "Todas las películas del catálogo"
+  },
+  "myLists": {
+    "title": "Mis Listas de Películas",
+    "favorites": "Favoritas",
+    "watched": "Vistas",
+    "pending": "Pendientes",
+    "empty": "Aún no has añadido nada aquí"
+  },
+  "profile": {
+    "memberSince": "Miembro desde 2024",
+    "movies": "Películas",
+    "lists": "Listas",
+    "recent": "Películas Vistas Recientemente",
+    "favorites": "Películas Favoritas"
+  },
+  "movieDetail": {
+    "addToList": "Añadir a Mis Listas",
+    "watched": "Marcar como vista",
+    "watchedDone": "Vista",
+    "favorite": "Añadir a favoritos",
+    "favoriteDone": "En favoritos",
+    "pending": "Pendiente de ver",
+    "pendingDone": "Pendiente",
+    "synopsis": "Sinopsis",
+    "director": "Director",
+    "cast": "Reparto",
+    "country": "País",
+    "language": "Idioma",
+    "notFound": "Película no encontrada",
+    "loading": "Cargando..."
+  },
+  "search": {
+    "placeholder": "Buscar películas...",
+    "filters": {
+      "title": "Filtros:",
+      "genre": "Género ▼",
+      "year": "Año ▼",
+      "rating": "Valoración ▼"
+    },
+    "results": {
+      "title": "Resultados",
+      "noResultsFound": "No se encontraron películas con ese nombre",
+      "startTyping": "Escribe algo para comenzar a buscar",
+      "searching": "Buscando a toda velocidad..."
+    }
+  },
+  "common": {
+    "loading": "Cargando...",
+    "retry": "Reintentar",
+    "createList": "Crear Nueva Lista"
+  },
+  "footer": {
+    "terms": "Términos de uso",
+    "privacy": "Privacidad",
+    "contact": "Contacto"
+  }
+}

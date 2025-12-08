@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
+import { useTranslation } from 'react-i18next';
 
 const MyLists = () => {
+  const { t } = useTranslation();
   const [lists, setLists] = useState({
     favorites: [],
     watched: [],
@@ -63,7 +65,7 @@ const MyLists = () => {
       </div>
 
       {lists[key].length === 0 ? (
-        <p className="text-gray-500 italic text-lg">Aún no has añadido nada aquí</p>
+        <p className="text-gray-500 italic text-lg">{t('myLists.empty')}</p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
           {lists[key].map(movie => (
@@ -80,7 +82,7 @@ const MyLists = () => {
               <button
                 onClick={() => removeFromList(movie.imdbID, key)}
                 className="absolute top-2 right-2 bg-white text-mc-red rounded-full w-9 h-9 flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition text-xl font-bold hover:bg-gray-100"
-                title="Quitar de la lista"
+                title={t('common.retry')}
               >
                 ×
               </button>
@@ -94,7 +96,7 @@ const MyLists = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-mc-light-blue flex items-center justify-center">
-        <p className="text-4xl font-bold text-mc-red animate-pulse">Cargando tus listas...</p>
+        <p className="text-4xl font-bold text-mc-red animate-pulse">{t('common.loading')}</p>
       </div>
     );
   }
@@ -105,22 +107,16 @@ const MyLists = () => {
 
       <main className="container mx-auto px-6 py-12">
         <h1 className="text-5xl font-bold text-center text-mc-red mb-12 drop-shadow-lg">
-          Mis Listas de Películas
+          {t('myLists.title')}
         </h1>
 
-        {/* Favoritas */}
-        {renderSection('Favoritas', 'favorites', 'bg-mc-red')}
+        {renderSection(t('myLists.favorites'), 'favorites', 'bg-mc-red')}
+        {renderSection(t('myLists.watched'), 'watched', 'bg-mc-orange')}
+        {renderSection(t('myLists.pending'), 'pending', 'bg-gray-700')}
 
-        {/* Vistas */}
-        {renderSection('Vistas', 'watched', 'bg-mc-orange')}
-
-        {/* Pendientes */}
-        {renderSection('Pendientes', 'pending', 'bg-gray-700')}
-
-        {/* Botón crear nueva lista */}
         <div className="text-center mt-20">
           <button className="inline-flex items-center gap-3 px-10 py-5 bg-white text-mc-red font-bold text-2xl rounded-full shadow-2xl hover:shadow-red-600/50 hover:bg-gray-50 transition transform hover:scale-105">
-            + Crear Nueva Lista
+            {t('common.createList')}
           </button>
         </div>
       </main>

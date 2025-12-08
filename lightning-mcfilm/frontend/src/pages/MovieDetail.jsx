@@ -3,8 +3,10 @@ import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
+import { useTranslation } from 'react-i18next';
 
 const MovieDetail = () => {
+  const { t } = useTranslation();
   const { imdbID } = useParams();
   const { user, toggleFavorite, toggleWatched, toggleWatchlist } = useAuth();
   
@@ -14,11 +16,9 @@ const MovieDetail = () => {
   const [isWatched, setIsWatched] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
-  // Cargar película + estado de listas
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        // 1. Cargar película
         const movieRes = await fetch(`http://localhost:4000/api/movies/detail/${imdbID}`);
         const movieData = await movieRes.json();
         setMovie(movieData);
@@ -28,7 +28,6 @@ const MovieDetail = () => {
           return;
         }
 
-        // 2. Cargar estado de listas
         const token = localStorage.getItem('token');
         const listsRes = await fetch('http://localhost:8000/my-lists', {
           headers: { Authorization: `Bearer ${token}` }
@@ -71,8 +70,8 @@ const MovieDetail = () => {
     }
   };
 
-  if (loading) return <div className="text-center py-20 text-4xl">Cargando...</div>;
-  if (!movie) return <div className="text-center py-20 text-3xl text-red-600">Película no encontrada</div>;
+  if (loading) return <div className="text-center py-20 text-4xl">{t('movieDetail.loading')}</div>;
+  if (!movie) return <div className="text-center py-20 text-3xl text-red-600">{t('movieDetail.notFound')}</div>;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-mc-light-blue to-white">
@@ -80,7 +79,7 @@ const MovieDetail = () => {
 
       <div className="container mx-auto px-6 py-12">
         <Link to="/home" className="inline-block mb-8 text-mc-orange hover:underline text-lg font-bold">
-          ← Volver al inicio
+          ← {t('home.title')}
         </Link>
 
         <div className="grid md:grid-cols-3 gap-10">
@@ -98,7 +97,6 @@ const MovieDetail = () => {
               </div>
             )}
 
-            {/* LOS 3 BOTONES LEGENDARIOS */}
             <div className="flex flex-wrap gap-6">
               <button
                 onClick={() => handleToggle('watched')}
@@ -108,7 +106,7 @@ const MovieDetail = () => {
                     : 'bg-white text-green-700 border-4 border-green-600 hover:bg-green-50'
                 }`}
               >
-                {isWatched ? 'Vista' : 'Marcar como vista'}
+                {isWatched ? t('movieDetail.watchedDone') : t('movieDetail.watched')}
               </button>
 
               <button
@@ -119,7 +117,7 @@ const MovieDetail = () => {
                     : 'bg-white text-yellow-700 border-4 border-yellow-500 hover:bg-yellow-50'
                 }`}
               >
-                {isFavorite ? 'En favoritos' : 'Añadir a favoritos'}
+                {isFavorite ? t('movieDetail.favoriteDone') : t('movieDetail.favorite')}
               </button>
 
               <button
@@ -130,18 +128,17 @@ const MovieDetail = () => {
                     : 'bg-white text-orange-700 border-4 border-orange-600 hover:bg-orange-50'
                 }`}
               >
-                {isPending ? 'Pendiente' : 'Pendiente de ver'}
+                {isPending ? t('movieDetail.pendingDone') : t('movieDetail.pending')}
               </button>
             </div>
 
             <div>
-              <h2 className="text-3xl font-bold text-mc-dark mb-4">Sinopsis</h2>
+              <h2 className="text-3xl font-bold text-mc-dark mb-4">{t('movieDetail.synopsis')}</h2>
               <p className="text-lg bg-white/90 p-8 rounded-2xl shadow-xl leading-relaxed">
-                {movie.Plot || 'Sin sinopsis disponible.'}
+                {movie.Plot || t('movieDetail.noSynopsis', { defaultValue: 'Sin sinopsis disponible.' })}
               </p>
             </div>
 
-            {/* Resto de detalles... */}
           </div>
         </div>
       </div>

@@ -1,0 +1,89 @@
+{
+  "header": {
+    "home": "Home",
+    "search": "Search",
+    "lists": "My Lists",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Welcome back",
+    "email": "Email",
+    "password": "Password",
+    "login": "Log In",
+    "noAccount": "Don't have an account?",
+    "register": "Sign up",
+    "loading": "Signing in..."
+  },
+  "register": {
+    "title": "Create your account",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "register": "Sign Up",
+    "haveAccount": "Already have an account?",
+    "login": "Log in",
+    "loading": "Creating..."
+  },
+  "home": {
+    "title": "Lightning McFilm",
+    "popular": "Trending Now",
+    "recent": "Recently Added",
+    "all": "All Movies"
+  },
+  "myLists": {
+    "title": "My Movie Lists",
+    "favorites": "Favorites",
+    "watched": "Watched",
+    "pending": "Pending",
+    "empty": "You haven't added anything here yet"
+  },
+  "profile": {
+    "memberSince": "Member since 2024",
+    "movies": "Movies",
+    "lists": "Lists",
+    "recent": "Recently Watched",
+    "favorites": "Favorite Movies"
+  },
+  "movieDetail": {
+    "addToList": "Add to My Lists",
+    "watched": "Mark as watched",
+    "watchedDone": "Watched",
+    "favorite": "Add to favorites",
+    "favoriteDone": "In favorites",
+    "pending": "Watch later",
+    "pendingDone": "Pending",
+    "synopsis": "Synopsis",
+    "director": "Director",
+    "cast": "Cast",
+    "country": "Country",
+    "language": "Language",
+    "notFound": "Movie not found",
+    "loading": "Loading..."
+  },
+  "search": {
+    "placeholder": "Search movies...",
+    "filters": {
+      "title": "Filters:",
+      "genre": "Genre ▼",
+      "year": "Year ▼",
+      "rating": "Rating ▼"
+    },
+    "results": {
+      "title": "Results",
+      "noResultsFound": "No movies found with that name",
+      "startTyping": "Type something to start searching",
+      "searching": "Searching at full speed..."
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "retry": "Retry",
+    "createList": "Create New List"
+  },
+  "footer": {
+    "terms": "Terms of use",
+    "privacy": "Privacy",
+    "contact": "Contact"
+  }
+}

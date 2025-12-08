@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import logo from '../assets/img/logo.jpg';
 
 const Login = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -29,7 +31,7 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-md rounded-xl p-8 w-80 border border-gray-300">
-        <h2 className="text-center text-xl font-semibold mb-4">Iniciar Sesión</h2>
+        <h2 className="text-center text-xl font-semibold mb-4">{t('login.title')}</h2>
         <hr className="mb-6" />
 
         <div className="flex justify-center mb-6">
@@ -41,7 +43,7 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Email"
+            placeholder={t('login.email')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -49,7 +51,7 @@ const Login = () => {
           />
           <input
             type="password"
-            placeholder="Password"
+            placeholder={t('login.password')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -67,14 +69,14 @@ const Login = () => {
             disabled={loading}
             className="w-full bg-gray-800 text-white py-2 rounded-md font-semibold hover:bg-red-900 transition disabled:opacity-60"
           >
-            {loading ? 'Entrando...' : 'Entrar'}
+            {loading ? t('login.loading') : t('login.login')}
           </button>
         </form>
 
         <div className="text-center mt-6 text-sm">
-          <p className="text-gray-600">¿No tienes cuenta?</p>
+          <p className="text-gray-600">{t('login.noAccount')}</p>
           <Link to="/register" className="text-red-500 hover:underline">
-            Regístrate aquí
+            {t('login.register')}
           </Link>
         </div>
       </div>

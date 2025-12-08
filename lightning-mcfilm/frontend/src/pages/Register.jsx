@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
+  const { t } = useTranslation();
   const [form, setForm] = useState({
     username: '',
     email: '',
@@ -43,13 +45,13 @@ const Register = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-md rounded-xl p-8 w-80 border border-gray-300">
-        <h2 className="text-center text-xl font-semibold mb-4">Registro</h2>
+        <h2 className="text-center text-xl font-semibold mb-4">{t('register.title')}</h2>
         <hr className="mb-6" />
 
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Usuario"
+            placeholder={t('register.name')}
             value={form.username}
             onChange={(e) => setForm({ ...form, username: e.target.value })}
             required
@@ -57,7 +59,7 @@ const Register = () => {
           />
           <input
             type="email"
-            placeholder="Email"
+            placeholder={t('register.email')}
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             required
@@ -65,7 +67,7 @@ const Register = () => {
           />
           <input
             type="password"
-            placeholder="Contraseña"
+            placeholder={t('register.password')}
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             required
@@ -73,7 +75,7 @@ const Register = () => {
           />
           <input
             type="password"
-            placeholder="Confirmar Contraseña"
+            placeholder={t('register.password')}
             value={form.password_conf}
             onChange={(e) => setForm({ ...form, password_conf: e.target.value })}
             required
@@ -91,14 +93,14 @@ const Register = () => {
             disabled={loading}
             className="w-full bg-gray-800 text-white py-2 rounded-md font-semibold hover:bg-red-900 transition disabled:opacity-60"
           >
-            {loading ? 'Creando...' : 'Crear Cuenta'}
+            {loading ? t('register.loading') : t('register.register')}
           </button>
         </form>
 
         <div className="text-center mt-6 text-sm">
-          <p className="text-gray-600">¿Ya tienes cuenta?</p>
+          <p className="text-gray-600">{t('register.haveAccount')}</p>
           <Link to="/login" className="text-red-500 hover:underline">
-            Iniciar Sesión
+            {t('register.login')}
           </Link>
         </div>
       </div>

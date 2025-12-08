@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
+import { useTranslation } from 'react-i18next';
 
 const Home = () => {
+  const { t } = useTranslation();
   const [recentMovies, setRecentMovies] = useState([]);
   const [allMovies, setAllMovies] = useState([]);
   const [loadingRecent, setLoadingRecent] = useState(true);
@@ -42,7 +44,6 @@ const Home = () => {
     loadAllMovies();
   }, []);
 
-  // PELÍCULAS POPULARES ESTÁTICAS (TODAS CLICABLES)
   const popularMovies = [
     { Title: "Cars", Year: "2006", imdbID: "tt0317219", Poster: "https://m.media-amazon.com/images/M/MV5BMTY2NzYxNTRjM15BMl5BanBnXkFtZTcwMjI0MTA0MQ@@._V1_.jpg" },
     { Title: "Cars 2", Year: "2011", imdbID: "tt1216475", Poster: "https://m.media-amazon.com/images/M/MV5BMTQzODAyNTM0MF5BMl5BanBnXkFtZTcwODA3NDg1NA@@._V1_.jpg" },
@@ -58,13 +59,12 @@ const Home = () => {
 
       <main className="container mx-auto px-4 py-12">
         <h1 className="text-6xl font-bold text-center text-mc-red mb-16 drop-shadow-2xl">
-          Lightning McFilm
+          {t('home.title')}
         </h1>
 
-        {/* POPULARES ESTÁTICAS */}
         <section className="mb-20">
           <h2 className="text-4xl font-bold text-center text-mc-orange mb-10 drop-shadow-lg">
-            Películas populares del momento
+            {t('home.popular')}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
             {popularMovies.map((movie) => (
@@ -88,18 +88,17 @@ const Home = () => {
           </div>
         </section>
 
-        {/* RECIENTES */}
         <section className="mb-20">
           <h2 className="text-4xl font-bold text-center text-mc-red mb-10 drop-shadow-lg">
-            Recién añadidas al catálogo
+            {t('home.recent')}
           </h2>
           {loadingRecent ? (
-            <p className="text-center text-2xl text-mc-dark">Cargando novedades...</p>
+            <p className="text-center text-2xl text-mc-dark">{t('common.loading')}</p>
           ) : errorRecent ? (
             <div className="text-center text-red-600">
               <p className="text-xl mb-4">Error: {errorRecent}</p>
               <button onClick={loadRecentMovies} className="px-6 py-3 bg-mc-red text-white rounded-lg">
-                Reintentar
+                {t('common.retry')}
               </button>
             </div>
           ) : recentMovies.length > 0 ? (
@@ -124,22 +123,21 @@ const Home = () => {
               ))}
             </div>
           ) : (
-            <p className="text-center text-xl text-mc-gray">Aún no hay películas nuevas</p>
+            <p className="text-center text-xl text-mc-gray">{t('myLists.empty')}</p>
           )}
         </section>
 
-        {/* TODAS LAS PELÍCULAS */}
         <section>
           <h2 className="text-4xl font-bold text-center text-mc-orange mb-10 drop-shadow-lg">
-            Todas las películas del catálogo
+            {t('home.all')}
           </h2>
           {loadingAll ? (
-            <p className="text-center text-2xl text-mc-dark">Cargando catálogo...</p>
+            <p className="text-center text-2xl text-mc-dark">{t('common.loading')}</p>
           ) : errorAll ? (
             <div className="text-center text-red-600">
               <p className="text-xl mb-4">Error: {errorAll}</p>
               <button onClick={loadAllMovies} className="px-6 py-3 bg-mc-red text-white rounded-lg">
-                Reintentar
+                {t('common.retry')}
               </button>
             </div>
           ) : allMovies.length > 0 ? (
@@ -164,7 +162,7 @@ const Home = () => {
               ))}
             </div>
           ) : (
-            <p className="text-center text-xl text-mc-gray">El catálogo está vacío</p>
+            <p className="text-center text-xl text-mc-gray">{t('myLists.empty')}</p>
           )}
         </section>
       </main>
