@@ -42,7 +42,7 @@ Solo necesitas Docker Desktop instalado.
 
 Una vez que todo esté levantado con Docker, abre tu navegador favorito y accede a:
 
-**http://localhost:5173**
+**http://localhost**
 
 ¡Y listo! Ya tienes Lightning McFilm corriendo al 100 %:
 
