@@ -36,11 +36,13 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  const API_BASE = 'http://localhost:4000'; // <- Usar Gateway siempre
+
   const login = async (email, password) => {
     try {
       console.log('🔑 Intentando login:', { email });
       
-      const res = await fetch('http://localhost:4000/api/auth/login', {
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -72,7 +74,7 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log('📝 Intentando registro:', { name, email });
       
-      const res = await fetch('http://localhost:4000/api/auth/register', {
+      const res = await fetch(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password })
@@ -110,14 +112,14 @@ export const AuthProvider = ({ children }) => {
   
 const toggleFavorite = async (movie) => {
   const token = localStorage.getItem('token');
-  console.log('TOKEN que envío:', token); // ← AÑADE ESTO
+  console.log('TOKEN que envío:', token);
 
   if (!token) {
     alert('No hay token, inicia sesión');
     return false;
   }
 
-  const res = await fetch('http://localhost:8000/favorites', {
+  const res = await fetch(`${API_BASE}/favorites`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -131,7 +133,7 @@ const toggleFavorite = async (movie) => {
     })
   });
 
-  console.log('Respuesta del backend:', res.status); // ← AÑADE ESTO
+  console.log('Respuesta del backend (favorites):', res.status);
   return res.ok;
 };
 
@@ -141,7 +143,7 @@ const toggleWatched = async (movie) => {
 
   if (!token) return false;
 
-  const res = await fetch('http://localhost:8000/watched', {
+  const res = await fetch(`${API_BASE}/watched`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -165,7 +167,7 @@ const toggleWatchlist = async (movie) => {
 
   if (!token) return false;
 
-  const res = await fetch('http://localhost:8000/watchlist', {
+  const res = await fetch(`${API_BASE}/watchlist`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
