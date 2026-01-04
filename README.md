@@ -42,7 +42,7 @@ Solo necesitas Docker Desktop instalado.
 
 Una vez que todo esté levantado con Docker, abre tu navegador favorito y accede a:
 
-**http://localhost:5173**
+**http://localhost**
 
 ¡Y listo! Ya tienes Lightning McFilm corriendo al 100 %:
 
@@ -58,7 +58,4 @@ Una vez que todo esté levantado con Docker, abre tu navegador favorito y accede
 | Servicio              | URL                              | Descripción                      |
 |-----------------------|----------------------------------|----------------------------------|
 | Frontend (cliente)    | http://localhost:5173            | La app principal (lo que ve el usuario) |
-| API Gateway           | http://localhost:4000            | Proxy que une todos los servicios |
 | Swagger (docs API)    | http://localhost:4000/docs       | Documentación completa de la API |
-| User Service (directo)| http://localhost:8000/docs       | Docs del backend de usuarios     |
-| Movie Service         | http://localhost:5000            | Servicio de películas (si lo tienes expuesto) |
