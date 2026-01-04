@@ -1,7 +1,5 @@
 # Lightning McFilm ⚡🎬
 
-**Tu cine a toda velocidad – KA-CHOW!**
-
 Lightning McFilm es una plataforma de películas inspirada en el rayo más rápido de Radiator Springs.  
 Catálogo completo, listas personales (favoritas, vistas, pendientes), perfil de usuario, PWA instalable y diseño McQueen total.
 
@@ -36,4 +34,31 @@ Solo necesitas Docker Desktop instalado.
 
 1. Abre PowerShell o CMD en la carpeta raíz del proyecto (donde está `docker-compose.yml`)
 
-2. Ejecuta el comando
+2. Ejecuta el comando `docker compose up -d --build`. La primera vez tarda 2-5 minutos porque tiene que descargar imagenes y construir contenedores, las siguientes veces arranca en segundos
+
+3. Verifica que todo este corriendo con `docker compose ps`. Deberias ver 4-5 contenedores en estado "Up"
+
+### Cómo acceder a la parte cliente
+
+Una vez que todo esté levantado con Docker, abre tu navegador favorito y accede a:
+
+**http://localhost:5173**
+
+¡Y listo! Ya tienes Lightning McFilm corriendo al 100 %:
+
+- Login / Registro
+- Catálogo de películas
+- Mis Listas (favoritas, vistas, pendientes)
+- Perfil de usuario
+- Búsqueda
+- PWA instalable
+
+#### URLs útiles para desarrollo
+
+| Servicio              | URL                              | Descripción                      |
+|-----------------------|----------------------------------|----------------------------------|
+| Frontend (cliente)    | http://localhost:5173            | La app principal (lo que ve el usuario) |
+| API Gateway           | http://localhost:4000            | Proxy que une todos los servicios |
+| Swagger (docs API)    | http://localhost:4000/docs       | Documentación completa de la API |
+| User Service (directo)| http://localhost:8000/docs       | Docs del backend de usuarios     |
+| Movie Service         | http://localhost:5000            | Servicio de películas (si lo tienes expuesto) |
