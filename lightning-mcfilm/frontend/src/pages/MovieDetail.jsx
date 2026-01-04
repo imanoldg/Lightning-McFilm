@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import { useTranslation } from 'react-i18next';
-import { translateText } from '../utils/translate'; // ← AÑADE ESTO
+import { translateText } from '../utils/translate';
 
 const MovieDetail = () => {
   const { t, i18n } = useTranslation();
@@ -26,7 +26,6 @@ const MovieDetail = () => {
         const movieData = await movieRes.json();
         setMovie(movieData);
 
-        // Traducir título y sinopsis si estamos en español
         if (currentLang === 'es') {
           const translatedTitle = await translateText(movieData.Title, 'es');
           const translatedPlot = await translateText(movieData.Plot, 'es');
@@ -62,7 +61,7 @@ const MovieDetail = () => {
     };
 
     fetchAll();
-  }, [imdbID, user, currentLang]); // ← AÑADIDO currentLang para re-traducir al cambiar idioma
+  }, [imdbID, user, currentLang]);
 
   const handleToggle = async (type) => {
     if (!user) {
@@ -106,7 +105,6 @@ const MovieDetail = () => {
           </div>
 
           <div className="md:col-span-2 space-y-8">
-            {/* TÍTULO TRADUCIDO */}
             <h1 className="text-6xl font-bold text-mc-red">{displayMovie.Title}</h1>
             <p className="text-2xl text-gray-700">
               {displayMovie.Year} • {displayMovie.Runtime || 'N/A'} • {displayMovie.Genre || 'N/A'}
@@ -118,20 +116,42 @@ const MovieDetail = () => {
               </div>
             )}
 
-            {/* BOTONES */}
+            {/* BOTONES ARREGLADOS */}
             <div className="flex flex-wrap gap-6">
-              <button onClick={() => handleToggle('watched')} className={`...`}>
+              <button 
+                onClick={() => handleToggle('watched')} 
+                className={`px-8 py-4 rounded-full font-bold text-lg shadow-lg transition transform hover:scale-105 ${
+                  isWatched 
+                    ? 'bg-mc-orange text-white' 
+                    : 'bg-white text-mc-orange border-2 border-mc-orange'
+                }`}
+              >
                 {isWatched ? t('movieDetail.watchedDone') : t('movieDetail.watched')}
               </button>
-              <button onClick={() => handleToggle('favorite')} className={`...`}>
+              
+              <button 
+                onClick={() => handleToggle('favorite')} 
+                className={`px-8 py-4 rounded-full font-bold text-lg shadow-lg transition transform hover:scale-105 ${
+                  isFavorite 
+                    ? 'bg-mc-red text-white' 
+                    : 'bg-white text-mc-red border-2 border-mc-red'
+                }`}
+              >
                 {isFavorite ? t('movieDetail.favoriteDone') : t('movieDetail.favorite')}
               </button>
-              <button onClick={() => handleToggle('pending')} className={`...`}>
+              
+              <button 
+                onClick={() => handleToggle('pending')} 
+                className={`px-8 py-4 rounded-full font-bold text-lg shadow-lg transition transform hover:scale-105 ${
+                  isPending 
+                    ? 'bg-gray-700 text-white' 
+                    : 'bg-white text-gray-700 border-2 border-gray-700'
+                }`}
+              >
                 {isPending ? t('movieDetail.pendingDone') : t('movieDetail.pending')}
               </button>
             </div>
 
-            {/* SINOPSIS TRADUCIDA */}
             <div>
               <h2 className="text-3xl font-bold text-mc-dark mb-4">{t('movieDetail.synopsis')}</h2>
               <p className="text-lg bg-white/90 p-8 rounded-2xl shadow-xl leading-relaxed">
@@ -139,7 +159,6 @@ const MovieDetail = () => {
               </p>
             </div>
 
-            {/* RESTO DE DETALLES (labels traducidos) */}
             <div className="grid grid-cols-2 gap-8 text-lg bg-white/90 p-8 rounded-2xl shadow-xl">
               <div><strong>{t('movieDetail.director')}:</strong> {displayMovie.Director || t('movieDetail.unknown')}</div>
               <div><strong>{t('movieDetail.cast')}:</strong> {displayMovie.Actors || t('movieDetail.unknown')}</div>
