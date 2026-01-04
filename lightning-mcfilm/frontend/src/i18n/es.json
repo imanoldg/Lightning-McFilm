@@ -46,21 +46,27 @@
     "favorites": "Películas Favoritas"
   },
   "movieDetail": {
-    "addToList": "Añadir a Mis Listas",
-    "watched": "Marcar como vista",
-    "watchedDone": "Vista",
-    "favorite": "Añadir a favoritos",
-    "favoriteDone": "En favoritos",
-    "pending": "Pendiente de ver",
-    "pendingDone": "Pendiente",
-    "synopsis": "Sinopsis",
-    "director": "Director",
-    "cast": "Reparto",
-    "country": "País",
-    "language": "Idioma",
-    "notFound": "Película no encontrada",
-    "loading": "Cargando..."
-  },
+  "loading": "Cargando película...",
+  "notFound": "Película no encontrada",
+  "backToHome": "Volver al inicio",
+  "watched": "Marcar como vista",
+  "watchedDone": "Vista",
+  "favorite": "Añadir a favoritos",
+  "favoriteDone": "En favoritos",
+  "pending": "Pendiente de ver",
+  "pendingDone": "Pendiente",
+  "loginRequired": "Tienes que estar logueado, ka-chow!",
+  "synopsis": "Sinopsis",
+  "noSynopsis": "No hay sinopsis disponible.",
+  "director": "Director",
+  "cast": "Reparto",
+  "country": "País",
+  "language": "Idioma",
+  "runtime": "Duración",
+  "genre": "Género",
+  "ratings": "Valoraciones externas",
+  "unknown": "Desconocido"
+},
   "search": {
     "placeholder": "Buscar películas...",
     "filters": {
@@ -85,5 +91,16 @@
     "terms": "Términos de uso",
     "privacy": "Privacidad",
     "contact": "Contacto"
+  },
+
+  "movie": {
+    "director": "Director",
+    "cast": "Reparto",
+    "country": "País",
+    "language": "Idioma",
+    "synopsis": "Sinopsis",
+    "runtime": "Duración",
+    "genre": "Género",
+    "rating": "Valoración"
   }
 }

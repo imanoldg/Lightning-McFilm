@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import { useTranslation } from 'react-i18next';
+import { translateText } from '../utils/translate'; // ← AÑADIDO
 
 const Home = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
+
   const [recentMovies, setRecentMovies] = useState([]);
   const [allMovies, setAllMovies] = useState([]);
   const [loadingRecent, setLoadingRecent] = useState(true);
@@ -18,7 +21,19 @@ const Home = () => {
       const res = await fetch('http://localhost:4000/api/movies/recent');
       if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
       const data = await res.json();
-      setRecentMovies(data.movies || []);
+      let movies = data.movies || [];
+
+      // Traducir títulos si estamos en español
+      if (currentLang === 'es') {
+        movies = await Promise.all(
+          movies.map(async (movie) => ({
+            ...movie,
+            Title: await translateText(movie.Title, 'es')
+          }))
+        );
+      }
+
+      setRecentMovies(movies);
     } catch (err) {
       setErrorRecent(err.message);
     } finally {
@@ -31,7 +46,19 @@ const Home = () => {
       const res = await fetch('http://localhost:4000/api/movies/all');
       if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
       const data = await res.json();
-      setAllMovies(data.movies || []);
+      let movies = data.movies || [];
+
+      // Traducir títulos si estamos en español
+      if (currentLang === 'es') {
+        movies = await Promise.all(
+          movies.map(async (movie) => ({
+            ...movie,
+            Title: await translateText(movie.Title, 'es')
+          }))
+        );
+      }
+
+      setAllMovies(movies);
     } catch (err) {
       setErrorAll(err.message);
     } finally {
@@ -39,10 +66,11 @@ const Home = () => {
     }
   };
 
+  // Recargar al cambiar idioma
   useEffect(() => {
     loadRecentMovies();
     loadAllMovies();
-  }, []);
+  }, [currentLang]); // ← AÑADIDO: se recarga al cambiar idioma
 
   const popularMovies = [
     { Title: "Cars", Year: "2006", imdbID: "tt0317219", Poster: "https://m.media-amazon.com/images/M/MV5BMTY2NzYxNTRjM15BMl5BanBnXkFtZTcwMjI0MTA0MQ@@._V1_.jpg" },
@@ -53,6 +81,14 @@ const Home = () => {
     { Title: "Inside Out 2", Year: "2024", imdbID: "tt22022452", Poster: "https://m.media-amazon.com/images/M/MV5BYTc3MDc0MjAtMmM1NC00ZGM5LWIxOWEtYjYxZjY2ODI4N2RkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg" },
   ];
 
+  // Traducir títulos populares si estamos en español
+  const displayedPopular = currentLang === 'es' 
+    ? popularMovies.map(movie => ({
+        ...movie,
+        Title: translateText(movie.Title, 'es') // No await porque es estático (puedes pretraducir si quieres)
+      }))
+    : popularMovies;
+
   return (
     <div className="min-h-screen bg-mc-light-blue">
       <Header />
@@ -62,6 +98,7 @@ const Home = () => {
           {t('home.title')}
         </h1>
 
+        {/* POPULARES */}
         <section className="mb-20">
           <h2 className="text-4xl font-bold text-center text-mc-orange mb-10 drop-shadow-lg">
             {t('home.popular')}
@@ -80,7 +117,8 @@ const Home = () => {
                     className="w-full h-80 object-cover"
                   />
                   <div className="p-3 bg-mc-red text-white text-center font-bold text-sm">
-                    {movie.Title} ({movie.Year})
+                    {currentLang === 'es' ? movie.Title : movie.Title} ({movie.Year})
+                    {/* Aquí puedes mejorar con traducción precalculada si quieres */}
                   </div>
                 </div>
               </Link>
@@ -88,6 +126,7 @@ const Home = () => {
           </div>
         </section>
 
+        {/* RECIENTES */}
         <section className="mb-20">
           <h2 className="text-4xl font-bold text-center text-mc-red mb-10 drop-shadow-lg">
             {t('home.recent')}
@@ -127,6 +166,7 @@ const Home = () => {
           )}
         </section>
 
+        {/* TODAS LAS PELÍCULAS */}
         <section>
           <h2 className="text-4xl font-bold text-center text-mc-orange mb-10 drop-shadow-lg">
             {t('home.all')}

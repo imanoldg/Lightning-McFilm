@@ -46,21 +46,27 @@
     "favorites": "Favorite Movies"
   },
   "movieDetail": {
-    "addToList": "Add to My Lists",
-    "watched": "Mark as watched",
-    "watchedDone": "Watched",
-    "favorite": "Add to favorites",
-    "favoriteDone": "In favorites",
-    "pending": "Watch later",
-    "pendingDone": "Pending",
-    "synopsis": "Synopsis",
-    "director": "Director",
-    "cast": "Cast",
-    "country": "Country",
-    "language": "Language",
-    "notFound": "Movie not found",
-    "loading": "Loading..."
-  },
+  "loading": "Loading movie...",
+  "notFound": "Movie not found",
+  "backToHome": "Back to home",
+  "watched": "Mark as watched",
+  "watchedDone": "Watched",
+  "favorite": "Add to favorites",
+  "favoriteDone": "In favorites",
+  "pending": "Add to watch later",
+  "pendingDone": "Pending",
+  "loginRequired": "You must be logged in, ka-chow!",
+  "synopsis": "Synopsis",
+  "noSynopsis": "No synopsis available.",
+  "director": "Director",
+  "cast": "Cast",
+  "country": "Country",
+  "language": "Language",
+  "runtime": "Runtime",
+  "genre": "Genre",
+  "ratings": "External ratings",
+  "unknown": "Unknown"
+},
   "search": {
     "placeholder": "Search movies...",
     "filters": {
@@ -85,5 +91,16 @@
     "terms": "Terms of use",
     "privacy": "Privacy",
     "contact": "Contact"
+  },
+
+  "movie": {
+    "director": "Director",
+    "cast": "Cast",
+    "country": "Country",
+    "language": "Language",
+    "synopsis": "Synopsis",
+    "runtime": "Runtime",
+    "genre": "Genre",
+    "rating": "Rating"
   }
 }
