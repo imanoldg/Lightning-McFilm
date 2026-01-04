@@ -113,12 +113,6 @@ const MyLists = () => {
         {renderSection(t('myLists.favorites'), 'favorites', 'bg-mc-red')}
         {renderSection(t('myLists.watched'), 'watched', 'bg-mc-orange')}
         {renderSection(t('myLists.pending'), 'pending', 'bg-gray-700')}
-
-        <div className="text-center mt-20">
-          <button className="inline-flex items-center gap-3 px-10 py-5 bg-white text-mc-red font-bold text-2xl rounded-full shadow-2xl hover:shadow-red-600/50 hover:bg-gray-50 transition transform hover:scale-105">
-            {t('common.createList')}
-          </button>
-        </div>
       </main>
 
       <Footer />
